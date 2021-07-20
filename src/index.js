@@ -4,12 +4,13 @@ import guitar from './assets/sprites/music-ocal/32x32/guitar_electric.png';
 import flute from './assets/sprites/music-ocal/32x32/flute.png';
 import drums from './assets/sprites/music-ocal/32x32/drums.png';
 import trumpet from './assets/sprites/music-ocal/32x32/trumpet.png';
+import turntable from './assets/sprites/MegaPixelArt32x32pxIcons_SpriteSheet/turntable.png';
 
 import blip from './assets/audio/blip.mp3';
 import * as Tone from 'tone';
 import songtest from './songtest.js';
 import * as song from './song.js';
-import forest from './assets/tiles/forest-01.json';
+import forest from './assets/tiles/forest-03.json';
 import tiles from './assets/tiles/RPG\ Nature\ Tileset.png';
 
 class MyGame extends Phaser.Scene {
@@ -26,6 +27,7 @@ class MyGame extends Phaser.Scene {
         this.load.image('flute', flute);
         this.load.image('drums', drums);
         this.load.image('trumpet', trumpet);
+        this.load.image('turntable', turntable)
 
         // load sfx
         this.load.audio('blip', blip);
@@ -42,9 +44,25 @@ class MyGame extends Phaser.Scene {
         const map = this.make.tilemap({ key: 'forest' });
         const tileset = map.addTilesetImage('forest', 'tiles', 32, 32, 0, 0);
 
-        map.createStaticLayer('ground', tileset);
+        const groundLayer = map.createStaticLayer('ground', tileset);
+        groundLayer.setCollisionByProperty({ collides: true });
+
         const wallsLayer = map.createStaticLayer('trees', tileset);
         wallsLayer.setCollisionByProperty({ collides: true });
+
+
+        // // DEBUG COLLISIONS
+        // const debugGraphics = this.add.graphics().setAlpha(0.7);
+        // wallsLayer.renderDebug(debugGraphics, {
+        //     tileColor: null,
+        //     collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
+        //     faceColor: new Phaser.Display.Color(40, 39, 37, 255)
+        // });
+        // groundLayer.renderDebug(debugGraphics, {
+        //     tileColor: null,
+        //     collidingTileColor: new Phaser.Display.Color(255, 134, 48, 255),
+        //     faceColor: new Phaser.Display.Color(100, 39, 37, 255)
+        // });
 
 
         // Create guitar
@@ -67,11 +85,22 @@ class MyGame extends Phaser.Scene {
         this.trumpet.name = 'trumpet';
         this.trumpet.body.collideWorldBounds = true;
 
+        // Create turntable
+        this.turntable = this.physics.add.image(600, 530, 'turntable');
+        this.turntable.name = 'turntable';
+        this.turntable.body.collideWorldBounds = true;
+        this.turntable.displayHeight = 40;
+        this.turntable.displayWidth = 40;
+        this.turntable.flipX = true;
+
         // Create player
         this.player = this.physics.add.image(50, 50, 'wizard');
         this.player.displayHeight = 32;
         this.player.displayWidth = 32;
         this.player.body.collideWorldBounds = true;
+        this.physics.add.collider(this.player, wallsLayer);
+        this.physics.add.collider(this.player, groundLayer);
+
 
         // Create sound
         this.soundFX = this.sound.add('blip');
@@ -87,25 +116,34 @@ class MyGame extends Phaser.Scene {
 
     update(delta) {
 
+        const speed = 100;
+
         // Define Movement Commands (WASD)
         if (this.key_W.isDown) {
-            this.player.y--;
+            // this.player.y--;
+            this.player.setVelocity(0, -speed);
+        } else if (this.key_A.isDown) {
+            // this.player.x--;
+            this.player.setVelocity(-speed, 0);
+            this.player.flipX = true;
+        } else if (this.key_S.isDown) {
+            // this.player.y++;
+            this.player.setVelocity(0, speed);
+
+        } else if (this.key_D.isDown) {
+            // this.player.x++;
+            this.player.setVelocity(speed, 0);
+            this.player.flipX = false;
+        } else {
+            this.player.setVelocity(0, 0);
         }
-        if (this.key_A.isDown) {
-            this.player.x--;
-        }
-        if (this.key_S.isDown) {
-            this.player.y++;
-        }
-        if (this.key_D.isDown) {
-            this.player.x++;
-        }
+
 
         this.obtained(this.guitar, this.player, this.soundFX);
         this.obtained(this.flute, this.player, this.soundFX);
         this.obtained(this.drums, this.player, this.soundFX);
         this.obtained(this.trumpet, this.player, this.soundFX);
-
+        this.obtained(this.turntable, this.player, this.soundFX);
 
     }
 
@@ -126,6 +164,9 @@ class MyGame extends Phaser.Scene {
             }
             if (item.name === 'trumpet') {
                 song.createBass();
+            }
+            if (item.name === 'turntable') {
+                song.finale();
             }
         }
     }

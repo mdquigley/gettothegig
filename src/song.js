@@ -141,3 +141,7 @@ export function createFlute() {
 
     flutePart.start(0);
 }
+
+export function finale() {
+
+}
