@@ -9,6 +9,8 @@ import blip from './assets/audio/blip.mp3';
 import * as Tone from 'tone';
 import songtest from './songtest.js';
 import * as song from './song.js';
+import forest from './assets/tiles/forest-01.json';
+import tiles from './assets/tiles/RPG\ Nature\ Tileset.png';
 
 class MyGame extends Phaser.Scene {
     constructor() {
@@ -28,32 +30,45 @@ class MyGame extends Phaser.Scene {
         // load sfx
         this.load.audio('blip', blip);
 
+        // load map
+        this.load.image('tiles', tiles);
+        this.load.tilemapTiledJSON('forest', forest);
+
     }
 
     create() {
 
+        // Create Map
+        const map = this.make.tilemap({ key: 'forest' });
+        const tileset = map.addTilesetImage('forest', 'tiles', 32, 32, 0, 0);
+
+        map.createStaticLayer('ground', tileset);
+        const wallsLayer = map.createStaticLayer('trees', tileset);
+        wallsLayer.setCollisionByProperty({ collides: true });
+
+
         // Create guitar
-        this.guitar = this.physics.add.image(100, 100, 'guitar');
+        this.guitar = this.physics.add.image(570, 290, 'guitar');
         this.guitar.name = 'guitar';
         this.guitar.body.collideWorldBounds = true;
 
         // Create flute
-        this.flute = this.physics.add.image(200, 150, 'flute');
+        this.flute = this.physics.add.image(53, 410, 'flute');
         this.flute.name = 'flute';
         this.flute.body.collideWorldBounds = true;
 
         // Create drums
-        this.drums = this.physics.add.image(220, 110, 'drums');
+        this.drums = this.physics.add.image(60, 160, 'drums');
         this.drums.name = 'drums';
         this.drums.body.collideWorldBounds = true;
 
         // Create trumpet
-        this.trumpet = this.physics.add.image(200, 20, 'trumpet');
+        this.trumpet = this.physics.add.image(570, 60, 'trumpet');
         this.trumpet.name = 'trumpet';
         this.trumpet.body.collideWorldBounds = true;
 
         // Create player
-        this.player = this.physics.add.image(150, 100, 'wizard');
+        this.player = this.physics.add.image(50, 50, 'wizard');
         this.player.displayHeight = 32;
         this.player.displayWidth = 32;
         this.player.body.collideWorldBounds = true;
@@ -119,8 +134,11 @@ class MyGame extends Phaser.Scene {
 
 const config = {
     type: Phaser.AUTO,
-    width: 400,
-    height: 300,
+    width: 640,
+    height: 640,
+    scale: {
+        zoom: 1
+    },
     physics: {
         default: 'arcade',
     },
