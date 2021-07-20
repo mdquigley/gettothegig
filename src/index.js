@@ -36,32 +36,27 @@ class MyGame extends Phaser.Scene {
         this.guitar = this.physics.add.image(100, 100, 'guitar');
         this.guitar.name = 'guitar';
         this.guitar.body.collideWorldBounds = true;
-        this.guitar.body.setGravityY(-200);
 
         // Create flute
         this.flute = this.physics.add.image(200, 150, 'flute');
         this.flute.name = 'flute';
         this.flute.body.collideWorldBounds = true;
-        this.flute.body.setGravityY(-200);
 
         // Create drums
         this.drums = this.physics.add.image(220, 110, 'drums');
         this.drums.name = 'drums';
         this.drums.body.collideWorldBounds = true;
-        this.drums.body.setGravityY(-200);
 
         // Create trumpet
         this.trumpet = this.physics.add.image(200, 20, 'trumpet');
         this.trumpet.name = 'trumpet';
         this.trumpet.body.collideWorldBounds = true;
-        this.trumpet.body.setGravityY(-200);
 
         // Create player
         this.player = this.physics.add.image(150, 100, 'wizard');
         this.player.displayHeight = 32;
         this.player.displayWidth = 32;
         this.player.body.collideWorldBounds = true;
-        this.player.body.allowGravity = false;
 
         // Create sound
         this.soundFX = this.sound.add('blip');
@@ -124,13 +119,10 @@ class MyGame extends Phaser.Scene {
 
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 400,
+    height: 300,
     physics: {
         default: 'arcade',
-        arcade: {
-            gravity: { y: 200 }
-        }
     },
     scene: MyGame
 };

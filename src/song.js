@@ -141,16 +141,3 @@ export function createFlute() {
 
     flutePart.start(0);
 }
-
-// export function stop() {
-
-//     // Set stop position for instrument parts
-//     flutePart.stop(0);
-//     bassPart.stop(0);
-//     kickPart.stop(0);
-//     snarePart.stop(0);
-//     guitarPart.stop(0);
-
-//     // Stop the transport
-//     Tone.Transport.stop();
-// }
