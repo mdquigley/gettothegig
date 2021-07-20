@@ -5,6 +5,8 @@ import flute from './assets/sprites/music-ocal/32x32/flute.png';
 import drums from './assets/sprites/music-ocal/32x32/drums.png';
 import trumpet from './assets/sprites/music-ocal/32x32/trumpet.png';
 import turntable from './assets/sprites/MegaPixelArt32x32pxIcons_SpriteSheet/turntable.png';
+import musicnote1 from './assets/sprites/MegaPixelArt32x32pxIcons_SpriteSheet/music-note-1.png';
+import musicnote2 from './assets/sprites/MegaPixelArt32x32pxIcons_SpriteSheet/music-note-2.png';
 
 import blip from './assets/audio/blip.mp3';
 import * as Tone from 'tone';
@@ -28,6 +30,9 @@ class MyGame extends Phaser.Scene {
         this.load.image('drums', drums);
         this.load.image('trumpet', trumpet);
         this.load.image('turntable', turntable)
+        this.load.image('musicnote1', musicnote1);
+        this.load.image('musicnote2', musicnote2);
+
 
         // load sfx
         this.load.audio('blip', blip);
@@ -103,8 +108,8 @@ class MyGame extends Phaser.Scene {
 
 
         // Create sound
-        this.soundFX = this.sound.add('blip');
-        this.soundFX.volume = 0.3;
+        this.blip = this.sound.add('blip');
+        this.blip.volume = 0.3;
 
         // Create keys for Movement Commands (WASD)
         this.key_W = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -116,7 +121,7 @@ class MyGame extends Phaser.Scene {
 
     update(delta) {
 
-        const speed = 500;
+        const speed = 100;
 
         // Define Movement Commands (WASD)
         if (this.key_W.isDown) {
@@ -139,11 +144,11 @@ class MyGame extends Phaser.Scene {
         }
 
 
-        this.obtained(this.guitar, this.player, this.soundFX);
-        this.obtained(this.flute, this.player, this.soundFX);
-        this.obtained(this.drums, this.player, this.soundFX);
-        this.obtained(this.trumpet, this.player, this.soundFX);
-        this.obtained(this.turntable, this.player, this.soundFX);
+        this.obtained(this.guitar, this.player, this.blip);
+        this.obtained(this.flute, this.player, this.blip);
+        this.obtained(this.drums, this.player, this.blip);
+        this.obtained(this.trumpet, this.player, this.blip);
+        this.obtained(this.turntable, this.player, this.blip);
 
     }
 
@@ -167,6 +172,14 @@ class MyGame extends Phaser.Scene {
             }
             if (item.name === 'turntable') {
                 song.finale(Tone.now());
+
+                for (let i = 0; i < 20; i++) {
+                    let note = this.physics.add.image(this.player.x, this.player.y, ((i % 2 != 0) ? 'musicnote1' : 'musicnote2'));
+                    note.setVelocity(Math.floor(Math.random() * -300), Math.floor(Math.random() * -300));
+                    note.setGravity(0, Math.floor(Math.random() * 400));
+                }
+
+
             }
         }
     }
