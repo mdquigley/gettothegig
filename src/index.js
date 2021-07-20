@@ -1,9 +1,14 @@
 import Phaser from 'phaser';
 import wizard from './assets/sprites/wizard/idle_24.gif';
 import guitar from './assets/sprites/music-ocal/32x32/guitar_electric.png';
-import piano from './assets/sprites/music-ocal/32x32/piano.png';
+import flute from './assets/sprites/music-ocal/32x32/flute.png';
+import drums from './assets/sprites/music-ocal/32x32/drums.png';
+import trumpet from './assets/sprites/music-ocal/32x32/trumpet.png';
+
 import blip from './assets/audio/blip.mp3';
 import * as Tone from 'tone';
+import songtest from './songtest.js';
+import * as song from './song.js';
 
 class MyGame extends Phaser.Scene {
     constructor() {
@@ -11,9 +16,16 @@ class MyGame extends Phaser.Scene {
     }
 
     preload() {
+        // load player image
         this.load.image('wizard', wizard);
+
+        // load instrument images
         this.load.image('guitar', guitar);
-        this.load.image('piano', piano);
+        this.load.image('flute', flute);
+        this.load.image('drums', drums);
+        this.load.image('trumpet', trumpet);
+
+        // load sfx
         this.load.audio('blip', blip);
 
     }
@@ -26,11 +38,23 @@ class MyGame extends Phaser.Scene {
         this.guitar.body.collideWorldBounds = true;
         this.guitar.body.setGravityY(-200);
 
-        // Create piano
-        this.piano = this.physics.add.image(200, 150, 'piano');
-        this.piano.name = 'piano';
-        this.piano.body.collideWorldBounds = true;
-        this.piano.body.setGravityY(-200);
+        // Create flute
+        this.flute = this.physics.add.image(200, 150, 'flute');
+        this.flute.name = 'flute';
+        this.flute.body.collideWorldBounds = true;
+        this.flute.body.setGravityY(-200);
+
+        // Create drums
+        this.drums = this.physics.add.image(220, 110, 'drums');
+        this.drums.name = 'drums';
+        this.drums.body.collideWorldBounds = true;
+        this.drums.body.setGravityY(-200);
+
+        // Create trumpet
+        this.trumpet = this.physics.add.image(200, 20, 'trumpet');
+        this.trumpet.name = 'trumpet';
+        this.trumpet.body.collideWorldBounds = true;
+        this.trumpet.body.setGravityY(-200);
 
         // Create player
         this.player = this.physics.add.image(150, 100, 'wizard');
@@ -48,8 +72,6 @@ class MyGame extends Phaser.Scene {
         this.key_A = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.key_S = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.key_D = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-
-        this.createKick();
 
     }
 
@@ -70,7 +92,11 @@ class MyGame extends Phaser.Scene {
         }
 
         this.obtained(this.guitar, this.player, this.soundFX);
-        this.obtained(this.piano, this.player, this.soundFX);
+        this.obtained(this.flute, this.player, this.soundFX);
+        this.obtained(this.drums, this.player, this.soundFX);
+        this.obtained(this.trumpet, this.player, this.soundFX);
+
+
     }
 
     obtained(item, player, sfx) {
@@ -78,82 +104,21 @@ class MyGame extends Phaser.Scene {
             console.log(item);
             sfx.play();
             item.destroy();
-            if (item.name === 'piano') {
-                this.createPiano();
-            }
             if (item.name === 'guitar') {
-                this.createGuitar();
+                song.createGuitar();
+            }
+            if (item.name === 'flute') {
+                song.createFlute();
+            }
+            if (item.name === 'drums') {
+                song.createKick();
+                song.createSnare();
+            }
+            if (item.name === 'trumpet') {
+                song.createBass();
             }
         }
     }
-
-    createKick() {
-        // KICK
-        const kick = new Tone.MembraneSynth({
-            envelope: {
-                sustain: 0,
-                attack: 0.02,
-                decay: 0.8
-            },
-            octaves: 10,
-            pitchDecay: 0.01,
-        }).toDestination();
-
-        const kickPart = new Tone.Loop(((time) => {
-            kick.triggerAttackRelease("C2", "8n", time);
-        }), "2n").start(0);
-    }
-
-    createPiano() {
-        // Piano
-        const keys = new Tone.PolySynth(Tone.Synth, {
-            volume: -8,
-            oscillator: {
-                partials: [1, 2, 1],
-            },
-        }).toDestination();
-
-        const cChord = ["C4", "E4", "G4", "B4"];
-        const dChord = ["D4", "F4", "A4", "C5"];
-        const gChord = ["B3", "D4", "E4", "A4"];
-        const pianoPart = new Tone.Part(((time, chord) => {
-            keys.triggerAttackRelease(chord, "8n", time);
-        }), [["0:0:2", cChord], ["0:1", cChord], ["0:1:3", dChord], ["0:2:2", cChord], ["0:3", cChord], ["0:3:2", gChord]]).start(0);
-
-        pianoPart.loop = true;
-        pianoPart.loopEnd = "1m";
-        pianoPart.humanize = true;
-    }
-
-    createGuitar() {
-        // Guitar
-
-        const reverb = new Tone.Reverb().toDestination();
-
-        const guitar = new Tone.MonoSynth({
-            volume: -5,
-            envelope: {
-                attack: 0.1,
-                decay: 0.3,
-                release: 2,
-            },
-            filterEnvelope: {
-                attack: 0.001,
-                decay: 0.01,
-                sustain: 0.5,
-                baseFrequency: 200,
-                octaves: 2.6
-            }
-        }).connect(reverb);
-
-        const guitarPart = new Tone.Sequence(((time, note) => {
-            guitar.triggerAttackRelease(note, "16n", time);
-        }), ["C5", "D5", "E5", "F5", "G5", "A5", "B5", "C6"], "4n").start(0);
-
-        guitarPart.probability = 0.9;
-
-    }
-
 }
 
 
@@ -173,7 +138,20 @@ const config = {
 const game = new Phaser.Game(config);
 
 // Start Transport on button click
-document.getElementById('start').addEventListener("click", e => Tone.Transport.start());
-
-// Set the transport BPM
-Tone.Transport.bpm.value = 100;
+const button = document.getElementById('play');
+button.addEventListener("click", e => {
+    if (button.playing === 'false') {
+        // Change play status
+        button.playing = 'true';
+        button.innerText = "Stop";
+        Tone.Transport.bpm.value = 180;
+        Tone.Transport.start();
+    } else {
+        // Change play status
+        button.playing = 'false';
+        // Stop the transport
+        Tone.Transport.stop();
+        // Update button text
+        button.innerText = "Start";
+    }
+});
