@@ -116,7 +116,7 @@ class MyGame extends Phaser.Scene {
 
     update(delta) {
 
-        const speed = 100;
+        const speed = 500;
 
         // Define Movement Commands (WASD)
         if (this.key_W.isDown) {
@@ -166,7 +166,7 @@ class MyGame extends Phaser.Scene {
                 song.createBass();
             }
             if (item.name === 'turntable') {
-                song.finale();
+                song.finale(Tone.now());
             }
         }
     }
