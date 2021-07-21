@@ -3,7 +3,7 @@ import wizard from './assets/sprites/wizard/idle_24.gif';
 import guitar from './assets/sprites/music-ocal/32x32/guitar_electric.png';
 import flute from './assets/sprites/music-ocal/32x32/flute.png';
 import drums from './assets/sprites/music-ocal/32x32/drums.png';
-import trumpet from './assets/sprites/music-ocal/32x32/trumpet.png';
+import tuba from './assets/sprites/tuba.png';
 import turntable from './assets/sprites/MegaPixelArt32x32pxIcons_SpriteSheet/turntable.png';
 import musicnote1 from './assets/sprites/MegaPixelArt32x32pxIcons_SpriteSheet/music-note-1.png';
 import musicnote2 from './assets/sprites/MegaPixelArt32x32pxIcons_SpriteSheet/music-note-2.png';
@@ -21,23 +21,25 @@ class MyGame extends Phaser.Scene {
     }
 
     preload() {
-        // load player image
+        // Load player image
         this.load.image('wizard', wizard);
 
-        // load instrument images
+        // Load item images
         this.load.image('guitar', guitar);
         this.load.image('flute', flute);
         this.load.image('drums', drums);
-        this.load.image('trumpet', trumpet);
-        this.load.image('turntable', turntable)
+        this.load.image('tuba', tuba);
+        this.load.image('turntable', turntable);
+
+        // Load success images
         this.load.image('musicnote1', musicnote1);
         this.load.image('musicnote2', musicnote2);
 
 
-        // load sfx
+        // Load sfx
         this.load.audio('blip', blip);
 
-        // load map
+        // Load map assets
         this.load.image('tiles', tiles);
         this.load.tilemapTiledJSON('forest', forest);
 
@@ -45,18 +47,21 @@ class MyGame extends Phaser.Scene {
 
     create() {
 
-        // Create Map
+        /* ***** MAP ***** */
+        // create map
         const map = this.make.tilemap({ key: 'forest' });
         const tileset = map.addTilesetImage('forest', 'tiles', 32, 32, 0, 0);
 
+        // Add ground layer
         const groundLayer = map.createStaticLayer('ground', tileset);
         groundLayer.setCollisionByProperty({ collides: true });
 
+        // Add tree layer
         const wallsLayer = map.createStaticLayer('trees', tileset);
         wallsLayer.setCollisionByProperty({ collides: true });
 
 
-        // // DEBUG COLLISIONS
+        /* ***** DEBUG COLLISIONS ***** */
         // const debugGraphics = this.add.graphics().setAlpha(0.7);
         // wallsLayer.renderDebug(debugGraphics, {
         //     tileColor: null,
@@ -85,10 +90,13 @@ class MyGame extends Phaser.Scene {
         this.drums.name = 'drums';
         this.drums.body.collideWorldBounds = true;
 
-        // Create trumpet
-        this.trumpet = this.physics.add.image(570, 60, 'trumpet');
-        this.trumpet.name = 'trumpet';
-        this.trumpet.body.collideWorldBounds = true;
+        // Create tuba
+        this.tuba = this.physics.add.image(570, 60, 'tuba');
+        this.tuba.displayWidth = 32;
+        this.tuba.displayHeight = 32;
+        this.tuba.flipX = true;
+        this.tuba.name = 'tuba';
+        this.tuba.body.collideWorldBounds = true;
 
         // Create turntable
         this.turntable = this.physics.add.image(600, 530, 'turntable');
@@ -121,7 +129,7 @@ class MyGame extends Phaser.Scene {
 
     update(delta) {
 
-        const speed = 100;
+        const speed = 500;
 
         // Define Movement Commands (WASD)
         if (this.key_W.isDown) {
@@ -147,7 +155,7 @@ class MyGame extends Phaser.Scene {
         this.obtained(this.guitar, this.player, this.blip);
         this.obtained(this.flute, this.player, this.blip);
         this.obtained(this.drums, this.player, this.blip);
-        this.obtained(this.trumpet, this.player, this.blip);
+        this.obtained(this.tuba, this.player, this.blip);
         this.obtained(this.turntable, this.player, this.blip);
 
     }
@@ -167,7 +175,7 @@ class MyGame extends Phaser.Scene {
                 song.createKick();
                 song.createSnare();
             }
-            if (item.name === 'trumpet') {
+            if (item.name === 'tuba') {
                 song.createBass();
             }
             if (item.name === 'turntable') {
