@@ -7,6 +7,7 @@ import tuba from './assets/sprites/tuba.png';
 import turntable from './assets/sprites/MegaPixelArt32x32pxIcons_SpriteSheet/turntable.png';
 import musicnote1 from './assets/sprites/MegaPixelArt32x32pxIcons_SpriteSheet/music-note-1.png';
 import musicnote2 from './assets/sprites/MegaPixelArt32x32pxIcons_SpriteSheet/music-note-2.png';
+import scratch from './assets/audio/record-scratch.mp3';
 
 import blip from './assets/audio/blip.mp3';
 import * as Tone from 'tone';
@@ -38,6 +39,7 @@ class MyGame extends Phaser.Scene {
 
         // Load sfx
         this.load.audio('blip', blip);
+        this.load.audio('scratch', scratch);
 
         // Load map assets
         this.load.image('tiles', tiles);
@@ -119,11 +121,15 @@ class MyGame extends Phaser.Scene {
         this.blip = this.sound.add('blip');
         this.blip.volume = 0.3;
 
+        this.scratch = this.sound.add('scratch');
+
         // Create keys for Movement Commands (WASD)
         this.key_W = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.key_A = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.key_S = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.key_D = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+
+        this.count = 0;
 
     }
 
@@ -156,7 +162,7 @@ class MyGame extends Phaser.Scene {
         this.obtained(this.flute, this.player, this.blip);
         this.obtained(this.drums, this.player, this.blip);
         this.obtained(this.tuba, this.player, this.blip);
-        this.obtained(this.turntable, this.player, this.blip);
+        this.obtained(this.turntable, this.player, this.scratch);
 
     }
 
@@ -167,18 +173,28 @@ class MyGame extends Phaser.Scene {
             item.destroy();
             if (item.name === 'guitar') {
                 song.createGuitar();
+                this.count++;
             }
             if (item.name === 'flute') {
                 song.createFlute();
+                this.count++;
             }
             if (item.name === 'drums') {
                 song.createKick();
                 song.createSnare();
+                this.count++;
+
             }
             if (item.name === 'tuba') {
                 song.createBass();
+                this.count++;
+
             }
             if (item.name === 'turntable') {
+                this.count++;
+            }
+
+            if (this.count === 5) {
                 song.finale(Tone.now());
 
                 for (let i = 0; i < 20; i++) {
@@ -186,8 +202,6 @@ class MyGame extends Phaser.Scene {
                     note.setVelocity(Math.floor(Math.random() * -300), Math.floor(Math.random() * -300));
                     note.setGravity(0, Math.floor(Math.random() * 400));
                 }
-
-
             }
         }
     }
