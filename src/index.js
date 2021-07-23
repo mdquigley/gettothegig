@@ -13,8 +13,10 @@ import blip from './assets/audio/blip.mp3';
 import * as Tone from 'tone';
 import songtest from './songtest.js';
 import * as song from './song.js';
-import forest from './assets/tiles/forest-03.json';
+import level from './assets/tiles/level-01.json';
 import tiles from './assets/tiles/RPG\ Nature\ Tileset.png';
+
+import shea from './assets/shea-3d-128.png';
 
 class MyGame extends Phaser.Scene {
     constructor() {
@@ -43,23 +45,29 @@ class MyGame extends Phaser.Scene {
 
         // Load map assets
         this.load.image('tiles', tiles);
-        this.load.tilemapTiledJSON('forest', forest);
+        this.load.tilemapTiledJSON('level', level);
+
+        this.load.image('shea', shea);
 
     }
 
     create() {
 
+
         /* ***** MAP ***** */
         // create map
-        const map = this.make.tilemap({ key: 'forest' });
-        const tileset = map.addTilesetImage('forest', 'tiles', 32, 32, 0, 0);
+        const map = this.make.tilemap({ key: 'level' });
+        const tileset = map.addTilesetImage('nature', 'tiles', 32, 32, 0, 0);
 
         // Add ground layer
-        const groundLayer = map.createStaticLayer('ground', tileset);
+        const groundLayer = map.createLayer("ground", tileset);
         groundLayer.setCollisionByProperty({ collides: true });
 
-        // Add tree layer
-        const wallsLayer = map.createStaticLayer('trees', tileset);
+        // Add mushrooms
+        const shroomLayer = map.createLayer('mushrooms', tileset);
+
+        // Add obstacles layer
+        const wallsLayer = map.createLayer('obstacles', tileset);
         wallsLayer.setCollisionByProperty({ collides: true });
 
 
@@ -78,22 +86,22 @@ class MyGame extends Phaser.Scene {
 
 
         // Create guitar
-        this.guitar = this.physics.add.image(570, 290, 'guitar');
+        this.guitar = this.physics.add.image(530, 593, 'guitar');
         this.guitar.name = 'guitar';
         this.guitar.body.collideWorldBounds = true;
 
         // Create flute
-        this.flute = this.physics.add.image(53, 410, 'flute');
+        this.flute = this.physics.add.image(53, 593, 'flute');
         this.flute.name = 'flute';
         this.flute.body.collideWorldBounds = true;
 
         // Create drums
-        this.drums = this.physics.add.image(60, 160, 'drums');
+        this.drums = this.physics.add.image(330, 170, 'drums');
         this.drums.name = 'drums';
         this.drums.body.collideWorldBounds = true;
 
         // Create tuba
-        this.tuba = this.physics.add.image(570, 60, 'tuba');
+        this.tuba = this.physics.add.image(180, 300, 'tuba');
         this.tuba.displayWidth = 32;
         this.tuba.displayHeight = 32;
         this.tuba.flipX = true;
@@ -101,12 +109,18 @@ class MyGame extends Phaser.Scene {
         this.tuba.body.collideWorldBounds = true;
 
         // Create turntable
-        this.turntable = this.physics.add.image(600, 530, 'turntable');
+        this.turntable = this.physics.add.image(440, 100, 'turntable');
         this.turntable.name = 'turntable';
         this.turntable.body.collideWorldBounds = true;
         this.turntable.displayHeight = 40;
         this.turntable.displayWidth = 40;
         this.turntable.flipX = true;
+
+        // Create Goal
+        this.goal = this.physics.add.image(540, 320, 'shea');
+        this.goal.scale = 0.2;
+        this.goal.name = 'goal';
+        this.goal.setImmovable();
 
         // Create player
         this.player = this.physics.add.image(50, 50, 'wizard');
@@ -116,12 +130,12 @@ class MyGame extends Phaser.Scene {
         this.physics.add.collider(this.player, wallsLayer);
         this.physics.add.collider(this.player, groundLayer);
 
-
         // Create sound
         this.blip = this.sound.add('blip');
         this.blip.volume = 0.3;
 
         this.scratch = this.sound.add('scratch');
+        this.scratch.volume = 0.5;
 
         // Create keys for Movement Commands (WASD)
         this.key_W = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -130,6 +144,7 @@ class MyGame extends Phaser.Scene {
         this.key_D = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
         this.count = 0;
+        this.won = false;
 
     }
 
@@ -163,14 +178,18 @@ class MyGame extends Phaser.Scene {
         this.obtained(this.drums, this.player, this.blip);
         this.obtained(this.tuba, this.player, this.blip);
         this.obtained(this.turntable, this.player, this.scratch);
+        this.obtained(this.goal, this.player, this.blip);
 
     }
 
     obtained(item, player, sfx) {
         if (this.physics.overlap(player, item) && !sfx.isPlaying) {
             console.log(item);
-            sfx.play();
-            item.destroy();
+
+            if (item.name !== 'goal') {
+                item.destroy();
+                sfx.play();
+            }
             if (item.name === 'guitar') {
                 song.createGuitar();
                 this.count++;
@@ -194,8 +213,10 @@ class MyGame extends Phaser.Scene {
                 this.count++;
             }
 
-            if (this.count === 5) {
+
+            if (item.name === 'goal' && this.count === 5 && this.won !== true) {
                 song.finale(Tone.now());
+                this.won = true;
 
                 for (let i = 0; i < 20; i++) {
                     let note = this.physics.add.image(this.player.x, this.player.y, ((i % 2 != 0) ? 'musicnote1' : 'musicnote2'));
