@@ -53,6 +53,8 @@ class MyGame extends Phaser.Scene {
 
     create() {
 
+        this.count = 0;
+        this.won = false;
 
         /* ***** MAP ***** */
         // create map
@@ -121,6 +123,8 @@ class MyGame extends Phaser.Scene {
         this.goal.scale = 0.2;
         this.goal.name = 'goal';
         this.goal.setImmovable();
+        this.goal.body.offset.y = -200;
+        this.goal.body.offset.x = 20;
 
         // Create player
         this.player = this.physics.add.image(50, 50, 'wizard');
@@ -129,6 +133,20 @@ class MyGame extends Phaser.Scene {
         this.player.body.collideWorldBounds = true;
         this.physics.add.collider(this.player, wallsLayer);
         this.physics.add.collider(this.player, groundLayer);
+        // this.physics.add.collider(this.player, this.goal);
+
+        this.physics.collide(this.player, this.goal, () => {
+            if (this.count === 5 && this.won !== true) {
+                song.finale(Tone.now());
+                this.won = true;
+
+                for (let i = 0; i < 20; i++) {
+                    let note = this.physics.add.image(this.player.x, this.player.y, ((i % 2 != 0) ? 'musicnote1' : 'musicnote2'));
+                    note.setVelocity(Math.floor(Math.random() * -300), Math.floor(Math.random() * -300));
+                    note.setGravity(0, Math.floor(Math.random() * 400));
+                }
+            }
+        });
 
         // Create sound
         this.blip = this.sound.add('blip');
@@ -142,9 +160,6 @@ class MyGame extends Phaser.Scene {
         this.key_A = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.key_S = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.key_D = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-
-        this.count = 0;
-        this.won = false;
 
     }
 
@@ -178,7 +193,7 @@ class MyGame extends Phaser.Scene {
         this.obtained(this.drums, this.player, this.blip);
         this.obtained(this.tuba, this.player, this.blip);
         this.obtained(this.turntable, this.player, this.scratch);
-        this.obtained(this.goal, this.player, this.blip);
+        // this.obtained(this.goal, this.player, this.blip);
 
     }
 
@@ -213,18 +228,20 @@ class MyGame extends Phaser.Scene {
                 this.count++;
             }
 
-
-            if (item.name === 'goal' && this.count === 5 && this.won !== true) {
-                song.finale(Tone.now());
-                this.won = true;
-
-                for (let i = 0; i < 20; i++) {
-                    let note = this.physics.add.image(this.player.x, this.player.y, ((i % 2 != 0) ? 'musicnote1' : 'musicnote2'));
-                    note.setVelocity(Math.floor(Math.random() * -300), Math.floor(Math.random() * -300));
-                    note.setGravity(0, Math.floor(Math.random() * 400));
-                }
-            }
         }
+        // if (this.physics.collide(player, item)) {
+        //     if (item.name === 'goal' && this.count === 5 && this.won !== true) {
+        //         song.finale(Tone.now());
+        //         this.won = true;
+
+        //         for (let i = 0; i < 20; i++) {
+        //             let note = this.physics.add.image(this.player.x, this.player.y, ((i % 2 != 0) ? 'musicnote1' : 'musicnote2'));
+        //             note.setVelocity(Math.floor(Math.random() * -300), Math.floor(Math.random() * -300));
+        //             note.setGravity(0, Math.floor(Math.random() * 400));
+        //         }
+        //     }
+        // }
+
     }
 }
 
@@ -238,6 +255,9 @@ const config = {
     },
     physics: {
         default: 'arcade',
+        arcade: {
+            debug: true
+        }
     },
     scene: MyGame
 };
