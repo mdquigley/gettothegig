@@ -118,13 +118,21 @@ class MyGame extends Phaser.Scene {
         this.turntable.displayWidth = 40;
         this.turntable.flipX = true;
 
-        // Create Goal
-        this.goal = this.physics.add.image(540, 320, 'shea');
-        this.goal.scale = 0.2;
-        this.goal.name = 'goal';
-        this.goal.setImmovable();
-        this.goal.body.offset.y = -200;
-        this.goal.body.offset.x = 20;
+        // Create Goal Walls
+        this.goalWalls = this.physics.add.image(540, 320, 'shea');
+        this.goalWalls.scale = 0.2;
+        this.goalWalls.name = 'goalWalls';
+        this.goalWalls.setImmovable();
+        this.goalWalls.body.offset.y = -200;
+        this.goalWalls.body.offset.x = 20;
+
+        // Create Goal Entry
+        this.goalEntry = this.physics.add.image(540, 320, 'shea');
+        this.goalEntry.scale = 0.2;
+        this.goalEntry.name = 'goalEntry';
+        this.goalEntry.setImmovable();
+        this.goalEntry.body.offset.y = -198;
+        this.goalEntry.body.offset.x = 50;
 
         // Create player
         this.player = this.physics.add.image(50, 50, 'wizard');
@@ -133,14 +141,14 @@ class MyGame extends Phaser.Scene {
         this.player.body.collideWorldBounds = true;
         this.physics.add.collider(this.player, wallsLayer);
         this.physics.add.collider(this.player, groundLayer);
-        // this.physics.add.collider(this.player, this.goal);
+        this.physics.add.collider(this.player, this.goalWalls);
 
-        this.physics.collide(this.player, this.goal, () => {
+        this.physics.add.collider(this.player, this.goalEntry, () => {
             if (this.count === 5 && this.won !== true) {
                 song.finale(Tone.now());
                 this.won = true;
 
-                for (let i = 0; i < 20; i++) {
+                for (let i = 0; i < 10; i++) {
                     let note = this.physics.add.image(this.player.x, this.player.y, ((i % 2 != 0) ? 'musicnote1' : 'musicnote2'));
                     note.setVelocity(Math.floor(Math.random() * -300), Math.floor(Math.random() * -300));
                     note.setGravity(0, Math.floor(Math.random() * 400));
@@ -193,18 +201,15 @@ class MyGame extends Phaser.Scene {
         this.obtained(this.drums, this.player, this.blip);
         this.obtained(this.tuba, this.player, this.blip);
         this.obtained(this.turntable, this.player, this.scratch);
-        // this.obtained(this.goal, this.player, this.blip);
 
     }
 
     obtained(item, player, sfx) {
         if (this.physics.overlap(player, item) && !sfx.isPlaying) {
             console.log(item);
+            item.destroy();
+            sfx.play();
 
-            if (item.name !== 'goal') {
-                item.destroy();
-                sfx.play();
-            }
             if (item.name === 'guitar') {
                 song.createGuitar();
                 this.count++;
