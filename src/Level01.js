@@ -14,6 +14,7 @@ import * as song from './song.js';
 import level from './assets/tiles/level-01.json';
 import tiles from './assets/tiles/RPG\ Nature\ Tileset.png';
 import shea from './assets/shea-3d-128.png';
+import youWon from './assets/nailed-it.png';
 
 export default class Level01 extends Phaser.Scene {
     constructor() {
@@ -45,6 +46,8 @@ export default class Level01 extends Phaser.Scene {
         this.load.tilemapTiledJSON('level', level);
 
         this.load.image('shea', shea);
+
+        this.load.image('youWon', youWon);
 
     }
 
@@ -150,6 +153,12 @@ export default class Level01 extends Phaser.Scene {
                     note.setVelocity(Math.floor(Math.random() * -300), Math.floor(Math.random() * -300));
                     note.setGravity(0, Math.floor(Math.random() * 400));
                 }
+
+                let windowWidth = this.cameras.main.width;
+                let windowHeight = this.cameras.main.height;
+                this.message = this.add.image(windowWidth / 2, windowHeight / 2, 'youWon').setOrigin(0.5);
+                this.message.setScale(0.5);
+
             }
         });
 
@@ -236,4 +245,11 @@ export default class Level01 extends Phaser.Scene {
 
         }
     }
+
+    // won() {
+    //     let windowWidth = this.cameras.main.width;
+    //     let windowHeight = this.cameras.main.height;
+
+    //     this.message = this.add.image(windowWidth / 2, windowHeight / 2, 'youWon');
+    // }
 }
