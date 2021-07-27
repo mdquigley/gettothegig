@@ -15,6 +15,7 @@ import level from './assets/tiles/level-01.json';
 import tiles from './assets/tiles/RPG\ Nature\ Tileset.png';
 import shea from './assets/shea-3d-128.png';
 import youWon from './assets/nailed-it.png';
+import { white } from 'ansi-colors';
 
 export default class Level01 extends Phaser.Scene {
     constructor() {
@@ -32,10 +33,10 @@ export default class Level01 extends Phaser.Scene {
         this.load.image('tuba', tuba);
         this.load.image('merch', turntable);
 
-        // Load success images
+        // Load level completion images
         this.load.image('musicnote1', musicnote1);
         this.load.image('musicnote2', musicnote2);
-
+        this.load.image('youWon', youWon);
 
         // Load sfx
         this.load.audio('blip', blip);
@@ -45,18 +46,19 @@ export default class Level01 extends Phaser.Scene {
         this.load.image('tiles', tiles);
         this.load.tilemapTiledJSON('level', level);
 
+        // Load goal image
         this.load.image('shea', shea);
-
-        this.load.image('youWon', youWon);
 
     }
 
     create() {
 
+        // Count for items obtained
         this.count = 0;
-        this.won = false;
 
-        /* ***** MAP ***** */
+        // Level complete value
+        this.complete = false;
+
         // create map
         const map = this.make.tilemap({ key: 'level' });
         const tileset = map.addTilesetImage('nature', 'tiles', 32, 32, 0, 0);
@@ -69,13 +71,13 @@ export default class Level01 extends Phaser.Scene {
         const shroomLayer = map.createLayer('mushrooms', tileset);
 
         // Add obstacles layer
-        const wallsLayer = map.createLayer('obstacles', tileset);
-        wallsLayer.setCollisionByProperty({ collides: true });
+        const obstacleLayer = map.createLayer('obstacles', tileset);
+        obstacleLayer.setCollisionByProperty({ collides: true });
 
 
         /* ***** DEBUG COLLISIONS ***** */
         // const debugGraphics = this.add.graphics().setAlpha(0.7);
-        // wallsLayer.renderDebug(debugGraphics, {
+        // obstacleLayer.renderDebug(debugGraphics, {
         //     tileColor: null,
         //     collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
         //     faceColor: new Phaser.Display.Color(40, 39, 37, 255)
@@ -139,30 +141,51 @@ export default class Level01 extends Phaser.Scene {
         this.player.displayHeight = 32;
         this.player.displayWidth = 32;
         this.player.body.collideWorldBounds = true;
-        this.physics.add.collider(this.player, wallsLayer);
+
+        // Set collider for ground, obstacles, and goal
+        this.physics.add.collider(this.player, obstacleLayer);
         this.physics.add.collider(this.player, groundLayer);
         this.physics.add.collider(this.player, this.goalWalls);
 
+        // Set collider for goal
         this.physics.add.collider(this.player, this.goalEntry, () => {
-            if (this.count === 5 && this.won !== true) {
-                song.finale(Tone.now());
-                this.won = true;
 
+            // If all items are obtained
+            if (this.count === 5 && this.complete !== true) {
+
+                // Play finale song
+                song.finale(Tone.now());
+
+                // Set won to true
+                this.complete = true;
+
+                // Generate music note confetti
                 for (let i = 0; i < 10; i++) {
                     let note = this.physics.add.image(this.player.x, this.player.y, ((i % 2 != 0) ? 'musicnote1' : 'musicnote2'));
                     note.setVelocity(Math.floor(Math.random() * -300), Math.floor(Math.random() * -300));
                     note.setGravity(0, Math.floor(Math.random() * 400));
                 }
 
+                // Add level completion graphic
                 let windowWidth = this.cameras.main.width;
                 let windowHeight = this.cameras.main.height;
                 this.message = this.add.image(windowWidth / 2, windowHeight / 2, 'youWon').setOrigin(0.5);
                 this.message.setScale(0.5);
 
+                // Add reload message
+                this.enter = this.add.text(windowWidth / 2, windowHeight * 0.7, "Press Enter to Reload", { backgroundColor: 'white', color: '#000000', fontSize: '32px' }).setOrigin(0.5);
+
+                // Key event to load title scene
+                this.input.keyboard.on('keyup', (e) => {
+                    if (e.key === 'Enter') {
+                        this.scene.start('TitleScene');
+                    }
+                });
+
             }
         });
 
-        // Create sound
+        // Create sounds
         this.blip = this.sound.add('blip');
         this.blip.volume = 0.3;
 
@@ -245,11 +268,4 @@ export default class Level01 extends Phaser.Scene {
 
         }
     }
-
-    // won() {
-    //     let windowWidth = this.cameras.main.width;
-    //     let windowHeight = this.cameras.main.height;
-
-    //     this.message = this.add.image(windowWidth / 2, windowHeight / 2, 'youWon');
-    // }
 }
