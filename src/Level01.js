@@ -147,8 +147,10 @@ export default class Level01 extends Phaser.Scene {
         this.physics.add.collider(this.player, groundLayer);
         this.physics.add.collider(this.player, this.goalWalls);
 
-        // Set collider for goal
+        // Set collider for Goal with level complete callback function
         this.physics.add.collider(this.player, this.goalEntry, () => {
+
+            // LEVEL COMPLETE CALLBACK FUNCTION
 
             // If all items are obtained
             if (this.count === 5 && this.complete !== true) {
