@@ -7,6 +7,7 @@ export default class TitleScene extends Phaser.Scene {
     }
 
     preload() {
+        // Load image assets
         this.load.image('titleBg', './src/assets/title-bg.png');
         this.load.image('titleImage', './src/assets/title-512.png');
         this.load.audio('blip', './src/assets/audio/blip.mp3');
@@ -27,8 +28,12 @@ export default class TitleScene extends Phaser.Scene {
 
         this.enter = this.add.text(windowWidth / 2, windowHeight * 0.7, "Press Enter to Play", { color: '#4aaf56' }).setOrigin(0.5);
 
+        this.sfx = this.sound.add('blip');
+        this.sfx.volume = 0.3;
+
         this.input.keyboard.on('keyup', (e) => {
             if (e.key === 'Enter') {
+                this.sfx.play();
                 this.scene.start('Level01');
                 Tone.Transport.bpm.value = 180;
                 Tone.Transport.start();
