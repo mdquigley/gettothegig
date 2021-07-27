@@ -28,9 +28,8 @@ export default class TitleScene extends Phaser.Scene {
         this.enter = this.add.text(windowWidth / 2, windowHeight * 0.7, "Press Enter to Play", { color: '#4aaf56' }).setOrigin(0.5);
 
         this.input.keyboard.on('keyup', (e) => {
-            console.log(e.key)
             if (e.key === 'Enter') {
-                this.scene.start('MyGame');
+                this.scene.start('Level01');
                 Tone.Transport.bpm.value = 180;
                 Tone.Transport.start();
             }
