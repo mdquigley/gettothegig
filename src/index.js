@@ -18,6 +18,8 @@ import tiles from './assets/tiles/RPG\ Nature\ Tileset.png';
 
 import shea from './assets/shea-3d-128.png';
 
+import TitleScene from './TitleScene.js';
+
 class MyGame extends Phaser.Scene {
     constructor() {
         super();
@@ -264,7 +266,7 @@ const config = {
             debug: true
         }
     },
-    scene: MyGame
+    scene: [TitleScene, MyGame]
 };
 
 const game = new Phaser.Game(config);
