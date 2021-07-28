@@ -23,6 +23,11 @@ At present, the game is only a simple, single level. My main goals were to:
 
 Some possible future development may include:
 - additional levels (with other venues near and dear to my heart)
+- additional songs for each level
+- more complexity in the instrumental parts
+- more complexity in song structure (ie. verse, chorus, bridge for longer levels)
+- songs with varying styles to match level vibes
+- tone.js transciptions of friends' songs (with permission)
 - custom sprites for player and items
 - Stakes!
     - a countdown to gig time
