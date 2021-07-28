@@ -13,9 +13,8 @@ import * as Tone from 'tone';
 import * as song from './song.js';
 import level from './assets/tiles/level-01.json';
 import tiles from './assets/tiles/RPG\ Nature\ Tileset.png';
-import shea from './assets/shea-3d-128.png';
-import youWon from './assets/nailed-it.png';
-import { white } from 'ansi-colors';
+import shea from './assets/sprites/shea-3d-128.png';
+import youWon from './assets/sprites/nailed-it.png';
 
 export default class Level01 extends Phaser.Scene {
     constructor() {
