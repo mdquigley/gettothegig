@@ -1,3 +1,7 @@
+// "Get To The Gig: Level 01"
+//  by Mike Quigley
+//  License: CC BY-SA 
+
 import * as Tone from 'tone';
 
 
