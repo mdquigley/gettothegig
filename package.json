@@ -4,7 +4,7 @@
   "description": "Get To The Gig",
   "main": "src/index.js",
   "scripts": {
-    "build": "webpack --config webpack/prod.js && mv dist docs",
+    "build": "webpack --config webpack/prod.js",
     "start": "webpack-dev-server --config webpack/base.js --open"
   },
   "repository": {
