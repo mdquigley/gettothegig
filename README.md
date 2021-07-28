@@ -17,7 +17,7 @@ At present, the game is only a simple, single level. My main goals were to:
 - have game mechanics interact with the music
 - get some experience using the [Tiled](https://www.mapeditor.org/) map editor
 - make some pixel art using [Pixilart](https://www.pixilart.com/)
-    - I'm pretty stoked on the [venue graphic](https://raw.githubusercontent.com/mdquigley/gettothegig/master/src/assets/shea-3d-128.png), based on thee beloved [Shea Stadium BK](http://liveatsheastadium.com/)
+    - I'm pretty stoked on the [venue graphic](https://raw.githubusercontent.com/mdquigley/gettothegig/master/src/assets/sprites/shea-3d-128.png), based on thee beloved [Shea Stadium BK](http://liveatsheastadium.com/)
 
 Some possible future development may include:
 - additional levels (with other venues near and dear to my heart)
