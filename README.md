@@ -35,7 +35,7 @@ Some possible future development may include:
 |---------|-------------|
 | `npm install` | Install project dependencies |
 | `npm start` | Build project and open web server running project |
-| `npm run build` | Builds code bundle with production settings and publishes to 'docs' folder for hosting via GitHub pages |
+| `npm run build` | Builds code bundle with production settings, publishes to 'docs' for hosting |
 
 ## Additional Credits
 This project is based on the [Phaser 3 Webpack Project Template](https://github.com/photonstorm/phaser3-project-template).
