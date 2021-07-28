@@ -1,6 +1,8 @@
 # Get To The Gig
 
-A simple game built with the [Phaser 3](https://phaser.io/) and [Tone.js](https://tonejs.github.io/) frameworks.
+A simple game built with the [Phaser 3](https://phaser.io/) and [Tone.js](https://tonejs.github.io/) frameworks.  
+
+Check out the *work-in-progress* [demo](https://quig.info/gettothegig)
 
 ## About
 I wanted to build a game that utilized music in an interactive way, and in which the music itself was composed via code as oppposed to only playing back audio files. I thought of a quest style game in which the player picks up instruments and a corresponding musical layer is added to the soundtrack.
