@@ -1,5 +1,8 @@
 import Phaser from 'phaser';
 import * as Tone from 'tone';
+import titleBg from './assets/title-bg.png';
+import titleImage from './assets/title-512.png';
+import blip from './assets/audio/blip.mp3';
 
 export default class TitleScene extends Phaser.Scene {
     constructor() {
@@ -8,9 +11,9 @@ export default class TitleScene extends Phaser.Scene {
 
     preload() {
         // Load image assets
-        this.load.image('titleBg', './src/assets/title-bg.png');
-        this.load.image('titleImage', './src/assets/title-512.png');
-        this.load.audio('blip', './src/assets/audio/blip.mp3');
+        this.load.image('titleBg', titleBg);
+        this.load.image('titleImage', titleImage);
+        this.load.audio('blip', blip);
     }
 
     create() {
