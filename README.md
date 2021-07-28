@@ -1,49 +1,57 @@
-# Phaser 3 Webpack Project Template
+# Get To The Gig
 
-A Phaser 3 project template with ES6 support via [Babel 7](https://babeljs.io/) and [Webpack 4](https://webpack.js.org/) that includes hot-reloading for development and production-ready builds.
+A simple game built with the [Phaser 3](https://phaser.io/) and [Tone.js](https://tonejs.github.io/) frameworks.
 
-This has been updated for Phaser 3.50.0 version and above.
+## About
+I wanted to build a game that utilized music in an interactive way, and in which the music itself was composed via code as oppposed to only playing back audio files. I thought of a quest style game in which the player picks up instruments and a corresponding musical layer is added to the soundtrack.
 
-Loading images via JavaScript module `import` is also supported, although not recommended.
+## The Game
+*"Load-in was 30 minutes ago and your bandmates are nowhere to be found. Find all your gear and get to the gig!"*  
 
-## Requirements
+The player is presented with a top-down map, with restricted tiles (water) and obstacles (trees & rocks). They must reach the music venue, but can only enter after they've collected all of their gear items. The player navigates with **W A S D** keys. As instruments are collected, a new music layer is added to the soundtrack. Other items (merch) play a sound effect but do not add musical layers. 
 
-[Node.js](https://nodejs.org) is required to install dependencies and run scripts via `npm`.
+## Status
+At present, the game is only a simple, single level. My main goals were to:
+- build a game with Phaser 3
+- utilize Tone.js to compose the game music
+- have game mechanics interact with the music
+- get some experience using the [Tiled](https://www.mapeditor.org/) map editor
+- make some pixel art using [Pixilart](https://www.pixilart.com/)
+    - I'm pretty stoked on the [venue graphic](https://raw.githubusercontent.com/mdquigley/gettothegig/master/src/assets/shea-3d-128.png), based on thee beloved [Shea Stadium BK](http://liveatsheastadium.com/)
 
-## Available Commands
+Some possible future development may include:
+- additional levels (with other venues near and dear to my heart)
+- custom sprites for player and items
+- Stakes!
+    - a countdown to gig time
+    - the tempo increases as time left decreases?
+    - scores based on time
+    - NPCs that interfere with the quest
+    - Lasers? magic bolts? to counter NPCs
+
+## Development Commands
 
 | Command | Description |
 |---------|-------------|
 | `npm install` | Install project dependencies |
 | `npm start` | Build project and open web server running project |
-| `npm run build` | Builds code bundle with production settings (minification, uglification, etc..) |
+| `npm run build` | Builds code bundle with production settings and publishes to 'docs' folder for hosting via GitHub pages |
 
-## Writing Code
+## Additional Credits
+This project is based on the [Phaser 3 Webpack Project Template](https://github.com/photonstorm/phaser3-project-template).
 
-After cloning the repo, run `npm install` from your project directory. Then, you can start the local development server by running `npm start`.
+[Mega Pixel Art 32x32 px. Icons Sprite Sheet](https://vectorpixelstar.itch.io/mega-pixel-art-32x32-px-icons-sprite-sheet) provided by VectorPixelStar ([CC BY-SA](https://creativecommons.org/licenses/by-sa/4.0/deed.en))
 
-After starting the development server with `npm start`, you can edit any files in the `src` folder and webpack will automatically recompile and reload your server (available at `http://localhost:8080` by default).
+[Music icons](https://opengameart.org/content/cc0-music-icons) provided by OpenGameArt ([CC0](https://creativecommons.org/publicdomain/zero/1.0/))
 
-## Customizing the Template
+[Wizard sprite](https://opengameart.org/content/wizard-5) provided by OpenGameArt ([CC0](https://creativecommons.org/publicdomain/zero/1.0/))
 
-### Babel
+[RPG Nature Tileset](https://stealthix.itch.io/rpg-nature-tileset) provided by Stealthix ([CC0](https://creativecommons.org/publicdomain/zero/1.0/))
 
-You can write modern ES6+ JavaScript and Babel will transpile it to a version of JavaScript that you want your project to support. The targeted browsers are set in the `.babelrc` file and the default currently targets all browsers with total usage over "0.25%" but excludes IE11 and Opera Mini.
+[record_scratch.wav](https://freesound.org/people/ludvique/sounds/71853/) provided by Freesound ([CC0](https://creativecommons.org/publicdomain/zero/1.0/))
 
- ```
-"browsers": [
-  ">0.25%",
-  "not ie 11",
-  "not op_mini all"
-]
- ```
+[Platform Jump](https://freesound.org/people/Jofae/sounds/362328/) provided by Freesound ([CC0](https://creativecommons.org/publicdomain/zero/1.0/))
 
-### Webpack
+Shea Stadium BK sprite by Mike Quigley ([CC BY-SA](https://creativecommons.org/licenses/by-sa/4.0/deed.en))
 
-If you want to customize your build, such as adding a new webpack loader or plugin (i.e. for loading CSS or fonts), you can modify the `webpack/base.js` file for cross-project changes, or you can modify and/or create new configuration files and target them in specific npm tasks inside of `package.json'.
-
-## Deploying Code
-
-After you run the `npm run build` command, your code will be built into a single bundle located at `dist/bundle.min.js` along with any other assets you project depended. 
-
-If you put the contents of the `dist` folder in a publicly-accessible location (say something like `http://mycoolserver.com`), you should be able to open `http://mycoolserver.com/index.html` and play your game.
+"Get To The Gig: Level 01" song by Mike Quigley ([CC BY-SA](https://creativecommons.org/licenses/by-sa/4.0/deed.en))
