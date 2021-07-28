@@ -7,7 +7,7 @@ module.exports = merge(base, {
   mode: "production",
   output: {
     filename: "bundle.min.js",
-    path: path.resolve(__dirname, '../docs')
+    path: path.resolve(__dirname, '../docs') // change output name for hosting via github pages
   },
   devtool: false,
   performance: {
